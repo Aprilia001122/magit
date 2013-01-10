@@ -3389,8 +3389,9 @@ for this argument.)"
           (setq magit-forward-navigation-history nil))
         (setq magit-currently-shown-commit commit)
         (goto-char (point-min))
+      (let ((magit-hide-diffs t))
         (magit-mode-init dir 'magit-commit-mode
-                         #'magit-refresh-commit-buffer commit))))
+                         #'magit-refresh-commit-buffer commit)))))
     (if select
         (pop-to-buffer buf))))
 
@@ -4788,7 +4789,8 @@ With prefix argument, changes in staging area are kept.
              (goto-char (point-min))
              (let* ((range (cons (concat stash "^2^") stash))
                     (magit-current-diff-range range)
-                    (args (magit-rev-range-to-git range)))
+                    (args (magit-rev-range-to-git range))
+                    (magit-hide-diffs t))
                (magit-mode-init dir 'magit-diff-mode #'magit-refresh-diff-buffer
                                 range args)))))))
 ;;; Commits
@@ -5093,7 +5095,8 @@ restore the window state that was saved before ediff was called."
              (buf (get-buffer-create "*magit-diff*")))
         (display-buffer buf)
         (with-current-buffer buf
-          (magit-mode-init dir 'magit-diff-mode #'magit-refresh-diff-buffer range args)))))
+          (let ((magit-hide-diffs t))
+          (magit-mode-init dir 'magit-diff-mode #'magit-refresh-diff-buffer range args))))))
 
 (magit-define-command diff-working-tree (rev)
   (interactive (list (magit-read-rev "Diff with" (magit-default-rev))))
