@@ -5779,7 +5779,12 @@ This is only non-nil in reflog buffers.")
                       (magit-show (cdr range) file1)))
        (t
         (magit-ediff* (magit-show (car range) file2)
-                      (magit-show (cdr range) file1)))))))
+                      (magit-show (cdr range) file1))))
+      (add-hook 'ediff-quit-hook
+                (lambda ()
+                  (let ((original-windows (current-window-configuration)))
+                    (ediff-cleanup-mess)
+                    (set-window-configuration original-windows)))))))
 
 (defun magit-ediff-add-cleanup ()
   (make-local-variable 'magit-ediff-buffers)
